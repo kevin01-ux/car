@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>長照車輛預約表單</title>
+  <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
+    h2 { color: #2c3e50; }
+    input, select, textarea {
+      width: 100%; padding: 8px; margin: 8px 0; box-sizing: border-box;
+    }
+    button {
+      background-color: #06c755;
+      color: white; padding: 10px 20px;
+      border: none; border-radius: 5px;
+      cursor: pointer; font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>長照車輛預約</h2>
+  <form id="bookingForm">
+    <label>姓名</label>
+    <input type="text" name="name" required>
+
+    <label>手機號碼</label>
+    <input type="text" name="phone" required>
+
+    <label>接送地址</label>
+    <textarea name="address" required></textarea>
+
+    <label>預約日期</label>
+    <input type="date" name="date" required>
+
+    <label>預約時段</label>
+    <select name="time_slot" required>
+      <option>早上</option>
+      <option>下午</option>
+      <option>晚上</option>
+    </select>
+
+    <label>是否需輪椅</label>
+    <select name="wheelchair" required>
+      <option>是</option>
+      <option>否</option>
+    </select>
+
+    <label>備註</label>
+    <textarea name="note"></textarea>
+
+    <button type="submit">送出預約</button>
+  </form>
+
+  <script>
+    document.getElementById("bookingForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        await fetch("https://www.ragic.com/你的帳號/a/你的應用/1", {
+          method: "POST",
+          headers: {
+            "Authorization": "Basic " + btoa("你的帳號email:你的API金鑰"),
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+        alert("✅ 預約成功！");
+        liff.closeWindow();
+      } catch (err) {
+        alert("❌ 預約失敗，請稍後再試");
+      }
+    });
+
+    liff.init({ liffId: "你的_LIFF_ID" });
+  </script>
+</body>
+</html>
